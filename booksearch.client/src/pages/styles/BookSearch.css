@@ -1,0 +1,52 @@
+/* src/pages/BookSearch.css */
+.book-search {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .search-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+}
+  
+  .search-input {
+    padding: 10px;
+    font-size: 1.1rem;
+    width: 300px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+  }
+  
+  .search-button {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    background-color: #61dafb;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .search-button:hover {
+    background-color: #21a1f1;
+  }
+  
+  .search-results {
+    margin-top: 20px;
+  }
+  
+  .book-item {
+    margin: 10px 0;
+    font-size: 1.2rem;
+  }

@@ -1,0 +1,118 @@
+/* Container for the entire registration section */
+.book-registration {
+    text-align: center;
+    margin: 20px;
+}
+
+/* The actual form container */
+.registration-form {
+    margin: auto;
+    max-width: 500px;
+}
+
+/* Each input group */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff; /* Adjust to suit your background */
+}
+
+/* Inputs, textarea, select elements */
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* For textareas specifically */
+textarea {
+    resize: vertical;
+}
+
+/* The submit button styling */
+.submit-button {
+    background-color: #00aaff;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .submit-button:hover {
+        background-color: #0088cc;
+    }
+
+/* Container around the checkbox scroll area */
+.checkbox-container {
+    max-height: 150px; /* Restrict height of the genres container */
+    overflow-y: auto; /* Enable vertical scrolling when needed */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff; /* White background for contrast */
+}
+
+/* Flex container for checkboxes */
+.checkbox-scroll {
+    display: flex;
+    flex-wrap: wrap; /* Let checkboxes wrap to multiple rows */
+    gap: 10px; /* Spacing between checkboxes */
+}
+
+/* Each checkbox label "block" */
+.checkbox-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease-in-out;
+    font-size: 14px;
+}
+
+    .checkbox-label:hover {
+        background-color: #ececec;
+    }
+
+    /* Hide the default checkbox appearance */
+    .checkbox-label input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+/* The custom box that visually replaces the default checkbox */
+.custom-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #aaa;
+    border-radius: 3px;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+/* When the checkbox is checked, change the custom box's background/border */
+.checkbox-label input[type="checkbox"]:checked ~ .custom-checkbox {
+    background-color: #00aaff;
+    border-color: #00aaff;
+}
+
+/* The text shown next to the custom box */
+.checkbox-text {
+    color: #333;
+}
