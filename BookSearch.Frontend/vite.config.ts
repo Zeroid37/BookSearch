@@ -67,6 +67,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/book/searchBooks': {
+                target,
+                secure: false
+            },
             '^/authping': {
                 target,
                 secure: false

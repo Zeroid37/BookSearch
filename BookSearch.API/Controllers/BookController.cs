@@ -3,7 +3,7 @@ using BookSearch.DAL.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using BookSearch.Logic.Logic;
+using BookSearch.BLL.Logic;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
@@ -33,6 +33,27 @@ namespace BookSearch.Server.Controllers
 
             await _bookLogic.SaveBookAsync(book);
             return Ok("Book saved successfully.");
+        }
+
+        [HttpPost("searchBooks")]
+        public async Task<IActionResult> SearchBooks([FromBody] BookDto criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest("Search criteria cannot be null.");
+            }
+
+            try
+            {
+                // Await the async method
+                var books = await _bookLogic.SearchBooksAsync(criteria);
+
+                return Ok(books);
+            } catch (Exception ex)
+            {
+                // Return error response in case of exceptions
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,52 +1,167 @@
-/* src/pages/BookSearch.css */
+/* General page styling */
 .book-search {
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .search-form {
     display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-body {
-    margin: 0;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    font-family: 'Arial', sans-serif;
 }
-  
-  .search-input {
+
+/* Wide search form container at the top */
+.search-form {
+    width: 90%;
+    max-width: 1200px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+    .search-form h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+        text-align: center;
+    }
+
+/* Form fields */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input,
+select,
+textarea {
     padding: 10px;
-    font-size: 1.1rem;
-    width: 300px;
-    border-radius: 25px;
+    font-size: 16px;
     border: 1px solid #ccc;
-    margin-right: 10px;
-  }
-  
-  .search-button {
-    padding: 10px 20px;
-    font-size: 1.1rem;
-    background-color: #61dafb;
-    color: white;
-    border: none;
-    border-radius: 25px;
+    border-radius: 4px;
+    outline: none;
+    width: 100%;
+}
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #0078d7;
+        box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
+    }
+
+/* Genres section */
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .search-button:hover {
-    background-color: #21a1f1;
-  }
-  
-  .search-results {
+    transition: background-color 0.2s ease-in-out;
+}
+
+    .checkbox-label:hover {
+        background-color: #f0f0f0;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        display: none;
+    }
+
+    .checkbox-label .custom-checkbox {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        display: inline-block;
+        background-color: #fff;
+    }
+
+    .checkbox-label input[type="checkbox"]:checked ~ .custom-checkbox {
+        background-color: #0078d7;
+        border-color: #0078d7;
+    }
+
+/* Submit button */
+.submit-button {
+    background-color: #0078d7;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    align-self: center;
+}
+
+    .submit-button:hover {
+        background-color: #005bb5;
+    }
+
+/* Results section */
+.results {
+    width: 90%;
+    max-width: 1200px;
     margin-top: 20px;
-  }
-  
-  .book-item {
-    margin: 10px 0;
-    font-size: 1.2rem;
-  }
+}
+
+    .results h2 {
+        font-size: 20px;
+        color: #333;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #0078d7;
+        padding-bottom: 5px;
+    }
+
+/* Table for displaying results */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+    .results-table th,
+    .results-table td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .results-table th {
+        background-color: #f0f0f0;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .results-table tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .results-table tr:nth-child(even) {
+        background-color: #f8f8f8;
+    }
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+}

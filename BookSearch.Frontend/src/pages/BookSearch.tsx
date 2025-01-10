@@ -1,78 +1,204 @@
-// src/pages/BookSearch.tsx
-import { useState } from "react";
-import "./styles/BookSearch.css"; // CSS for the search form and results
+import React, { useState } from "react";
+import "./styles/BookSearch.css";
 
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  genre: string;
-}
-
-const mockBooks: Book[] = [
-  {
-    id: 1,
-    title: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    genre: "Fiction",
-  },
-  { id: 2, title: "1984", author: "George Orwell", genre: "Dystopian" },
-  {
-    id: 3,
-    title: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    genre: "Classic",
-  },
-  // Add more mock books here
+const genreOptions = [
+    "Fiction",
+    "Non-Fiction",
+    "Sci-Fi",
+    "Fantasy",
+    "Mystery",
+    "Romance",
+    "Thriller",
+    "Self-Help",
+    "Adventure",
+    "Biography",
+    "Horror",
+    "Drama",
+    "History",
+    "Poetry",
+    "Classics",
+    "Science",
+    "Travel",
 ];
 
-const BookSearch = () => {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Book[]>([]);
+const BookSearch: React.FC = () => {
+    const [title, setTitle] = useState<string>("");
+    const [author, setAuthor] = useState<string>("");
+    const [isbn, setIsbn] = useState<string>("");
+    const [publisher, setPublisher] = useState<string>("");
+    const [publishYear, setPublishYear] = useState<string>("");
+    const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+    const [results, setResults] = useState<any[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const filteredBooks = mockBooks.filter(
-      (book) =>
-        book.title.toLowerCase().includes(query.toLowerCase()) ||
-        book.author.toLowerCase().includes(query.toLowerCase()) ||
-        book.genre.toLowerCase().includes(query.toLowerCase())
+    const currentYear = new Date().getFullYear();
+    const years = Array.from(new Array(200), (_, i) => currentYear - i);
+
+    const handleGenreChange = (genre: string) => {
+        if (selectedGenres.includes(genre)) {
+            setSelectedGenres(selectedGenres.filter((g) => g !== genre));
+        } else {
+            setSelectedGenres([...selectedGenres, genre]);
+        }
+    };
+
+    const handleSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const payload = {
+            title: title || "",
+            author: author || "",
+            isbn: isbn || "",
+            publisher: publisher || "",
+            publishYear: publishYear || "",
+            genres: selectedGenres, // Send genres as an array
+            description: "", // Send description as an empty string
+        };
+
+        try {
+            const response = await fetch("/book/searchBooks", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload), // Send payload in the request body
+            });
+
+            if (response.ok) {
+                const data = await response.json(); // Parse the response JSON
+                setResults(data); // Update the results state
+                setError(null); // Clear any previous errors
+            } else {
+                setError("Failed to fetch results. Please try again.");
+            }
+        } catch (err) {
+            console.error(err);
+            setError("An error occurred while searching for books.");
+        }
+    };
+
+    return (
+        <div className="book-search">
+            {/* Search Form */}
+            <form className="search-form" onSubmit={handleSearch}>
+                <h1>Search for Books</h1>
+
+                {/* Title */}
+                <div className="form-group">
+                    <label htmlFor="title">Title</label>
+                    <input
+                        type="text"
+                        id="title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                </div>
+
+                {/* Author */}
+                <div className="form-group">
+                    <label htmlFor="author">Author</label>
+                    <input
+                        type="text"
+                        id="author"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                    />
+                </div>
+
+                {/* ISBN */}
+                <div className="form-group">
+                    <label htmlFor="isbn">ISBN</label>
+                    <input
+                        type="text"
+                        id="isbn"
+                        value={isbn}
+                        onChange={(e) => setIsbn(e.target.value)}
+                    />
+                </div>
+
+                {/* Publisher */}
+                <div className="form-group">
+                    <label htmlFor="publisher">Publisher</label>
+                    <input
+                        type="text"
+                        id="publisher"
+                        value={publisher}
+                        onChange={(e) => setPublisher(e.target.value)}
+                    />
+                </div>
+
+                {/* Publish Year */}
+                <div className="form-group">
+                    <label htmlFor="publishYear">Publish Year</label>
+                    <select
+                        id="publishYear"
+                        value={publishYear}
+                        onChange={(e) => setPublishYear(e.target.value)}
+                    >
+                        <option value="">Select Year...</option>
+                        {years.map((year) => (
+                            <option key={year} value={year.toString()}>
+                                {year}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Genres */}
+                <div className="form-group">
+                    <label>Genres</label>
+                    <div className="checkbox-container">
+                        {genreOptions.map((genre) => (
+                            <label key={genre} className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    value={genre}
+                                    checked={selectedGenres.includes(genre)}
+                                    onChange={() => handleGenreChange(genre)}
+                                />
+                                <span className="custom-checkbox"></span>
+                                {genre}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                <button type="submit" className="submit-button">
+                    Search
+                </button>
+            </form>
+
+            {/* Results Section */}
+            {error && <p className="error-message">{error}</p>}
+            {results.length > 0 && (
+                <div className="results">
+                    <h2>Search Results</h2>
+                    <table className="results-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Year</th>
+                                <th>Author</th>
+                                <th>Genres</th>
+                                <th>Publisher</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {results.map((book, index) => (
+                                <tr key={index}>
+                                    <td>{book.title}</td>
+                                    <td>{book.publishYear}</td>
+                                    <td>{book.author}</td>
+                                    <td>{book.genres?.join(", ")}</td>
+                                    <td>{book.publisher}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
     );
-    setResults(filteredBooks);
-  };
-
-  return (
-    <div className="book-search">
-      <h1>Search Books</h1>
-      <form onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          placeholder="Search by title, author, or genre..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="search-input"
-        />
-        <button type="submit" className="search-button">
-          Search
-        </button>
-      </form>
-
-      <div className="search-results">
-        {results.length > 0 ? (
-          <ul>
-            {results.map((book) => (
-              <li key={book.id} className="book-item">
-                <strong>{book.title}</strong> by {book.author} (Genre:{" "}
-                {book.genre})
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No books found. Try searching for something else!</p>
-        )}
-      </div>
-    </div>
-  );
 };
 
 export default BookSearch;

@@ -1,4 +1,4 @@
-using BookSearch.Logic.Logic;
+using BookSearch.BLL.Logic;
 using BookSearch.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
