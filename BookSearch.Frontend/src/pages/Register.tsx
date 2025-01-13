@@ -41,8 +41,8 @@ function Register() {
             });
 
             if (response.ok) {
-                alert("Registration successful!");
                 navigate("/Login");
+                alert("Registration successful!");
             } else {
                 const errorMessage = await response.text();
                 setError(errorMessage || "Error registering.");

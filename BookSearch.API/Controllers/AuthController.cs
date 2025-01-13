@@ -50,17 +50,15 @@ namespace BookSearch.Server.Controllers
         {
             var result = await _authLogic.RegisterUserAsync(model);
 
-            if (result == null)
-            {
-                return BadRequest("Invalid registration details.");
-            }
-
-            if (!string.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
             {
                 return Conflict(result);
             }
-
-            return Ok("User registered successfully.");
+            if (result.Equals("User registered successfully."))
+            {
+                return Ok(result);
+            }
+            return Conflict(result);
         }
 
 

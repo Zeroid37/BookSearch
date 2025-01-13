@@ -25,7 +25,7 @@ namespace BookSearch.DAL.Repository
 
         public async Task<Item> GetBookByIsbnAsync(string isbn)
         {
-            string url = $"https://www.googleapis.com/books/v1/volumes?q={isbn}&maxResults=1&langRestrict=en";
+            string url = $"https://www.googleapis.com/books/v1/volumes?q={isbn}&maxResults=1&langRestrict=en&key={_apiKey}";
 
             using (HttpClient client = new HttpClient())
             {

@@ -135,7 +135,7 @@ namespace BookSearch.BLL.Logic
 
             await _authRepository.AddApplicationUserAsync(user);
 
-            return null;
+            return "User registered successfully.";
         }
     }
 }
