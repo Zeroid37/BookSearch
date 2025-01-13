@@ -1,25 +1,11 @@
 import React, { useState } from "react";
 import "./styles/BookRegistration.css";
 
-// Sample genres. Adjust as needed.
+
 const genreOptions = [
-    "Fiction",
-    "Non-Fiction",
-    "Sci-Fi",
-    "Fantasy",
-    "Mystery",
-    "Romance",
-    "Thriller",
-    "Self-Help",
-    "Adventure",
-    "Biography",
-    "Horror",
-    "Drama",
-    "History",
-    "Poetry",
-    "Classics",
-    "Science",
-    "Travel",
+    "Fiction", "Non-Fiction", "Sci-Fi", "Fantasy", "Mystery", "Romance", "Thriller",
+    "Self-Help", "Adventure", "Biography", "Horror", "Drama", "History", "Poetry",
+    "Classics", "Science", "Travel",
 ];
 
 const BookRegistration: React.FC = () => {
@@ -35,7 +21,6 @@ const BookRegistration: React.FC = () => {
     const currentYear = new Date().getFullYear();
     const years = Array.from(new Array(2000), (_, i) => currentYear - i);
 
-    // Handle genre selection with a custom checkbox approach
     const handleGenreChange = (genre: string) => {
         if (selectedGenres.includes(genre)) {
             setSelectedGenres(selectedGenres.filter((g) => g !== genre));
@@ -44,11 +29,40 @@ const BookRegistration: React.FC = () => {
         }
     };
 
-    // Handle the form submission
+    const handleSearchBook = async () => {
+        if (!isbn) {
+            alert("Please enter an ISBN to search.");
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('authToken');
+            const response = await fetch(`book/searchGoogleAPI?isbn=${isbn}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                const book = await response.json();
+                setTitle(book.title || "");
+                setAuthor(book.author || "");
+                setPublisher(book.publisher || "");
+                setPublishYear(book.publishYear || "");
+                setDescription(book.description || "");
+                setSelectedGenres(book.genres || []);
+            } else {
+                console.error("Failed to fetch book details.");
+            }
+        } catch (error) {
+            console.error("Error fetching book details:", error);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Basic validation
         if (!title || !author || !isbn || !publishYear || selectedGenres.length === 0) {
             alert("Please fill out Title, Author, ISBN, Publish Year, and select at least one Genre!");
             return;
@@ -58,8 +72,8 @@ const BookRegistration: React.FC = () => {
             title,
             author,
             isbn,
-            publisher,     // optional
-            publishYear,   // stored as string
+            publisher,
+            publishYear,
             genres: selectedGenres,
             description,
         };
@@ -119,17 +133,24 @@ const BookRegistration: React.FC = () => {
 
                     {/* ISBN */}
                     <div className="form-group">
-                        <label htmlFor="isbn">ISBN (optional)</label>
-                        <input
-                            type="text"
-                            id="isbn"
-                            value={isbn}
-                            onChange={(e) => setIsbn(e.target.value)}
-                            required
-                        />
+                        <label htmlFor="isbn">ISBN-13*</label>
+                        <div className="isbn-container">
+                            <input
+                                type="text"
+                                id="isbn"
+                                value={isbn}
+                                onChange={(e) => setIsbn(e.target.value)}
+                                required/>
+                            <button
+                                type="button"
+                                className="search-button"
+                                onClick={handleSearchBook}>
+                                Search
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Publisher (optional) */}
+                    {/* Publisher */}
                     <div className="form-group">
                         <label htmlFor="publisher">Publisher (optional)</label>
                         <input
@@ -140,7 +161,7 @@ const BookRegistration: React.FC = () => {
                         />
                     </div>
 
-                    {/* Publish Year (dropdown) */}
+                    {/* Publish Year */}
                     <div className="form-group">
                         <label htmlFor="publishYear">Publish Year*</label>
                         <select
@@ -158,7 +179,7 @@ const BookRegistration: React.FC = () => {
                         </select>
                     </div>
 
-                    {/* Genres (custom checkboxes) */}
+                    {/* Genres */}
                     <div className="form-group">
                         <label>Genres*</label>
                         <div className="checkbox-container">
@@ -187,7 +208,6 @@ const BookRegistration: React.FC = () => {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             rows={4}
-                            required
                         />
                     </div>
 

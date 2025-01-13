@@ -8,6 +8,7 @@
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:5173</SpaProxyServerUrl>
     <UserSecretsId>eb3d9113-9baf-4b33-8195-93de24417ef7</UserSecretsId>
+		<HideFolders>bin;obj</HideFolders>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../components/AuthContext"; // Import the Auth context
+import { useAuth } from "../components/AuthContext";
 import "./styles/Register.css";
 
 function Register() {
@@ -9,7 +9,7 @@ function Register() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    const { isAuthenticated, logout } = useAuth(); // Access authentication state and logout
+    const { isAuthenticated, logout } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -29,7 +29,7 @@ function Register() {
             return;
         }
 
-        setError(""); // Clear error message
+        setError("");
 
         try {
             const response = await fetch("/auth/register", {
@@ -41,8 +41,8 @@ function Register() {
             });
 
             if (response.ok) {
+                navigate("/Login");
                 alert("Registration successful!");
-                navigate("/Login"); // Redirect to login page
             } else {
                 const errorMessage = await response.text();
                 setError(errorMessage || "Error registering.");
@@ -73,24 +73,21 @@ function Register() {
                     <input
                         type="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                        onChange={(e) => setEmail(e.target.value)}/>
                 </div>
                 <div>
                     <label>Password</label>
                     <input
                         type="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                        onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <div>
                     <label>Confirm Password</label>
                     <input
                         type="password"
                         value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
+                        onChange={(e) => setConfirmPassword(e.target.value)}/>
                 </div>
                 <button type="submit">Register</button>
                 <button type="button" onClick={() => navigate("/Login")}>

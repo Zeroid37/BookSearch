@@ -8,7 +8,7 @@ interface UserProfile {
     lastName: string | null;
     phoneNumber: string | null;
     gender: string | null;
-    dateOfBirth?: string | null; // Replaces age
+    dateOfBirth?: string | null;
     image?: string;
     id?: string;
 }
@@ -21,12 +21,10 @@ const Profile: React.FC = () => {
 
     const [isEditing, setIsEditing] = useState(false);
 
-    // “Change Password” placeholder
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
     const { logout } = useAuth();
 
-    // Fetch profile on mount
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('authToken');
@@ -47,7 +45,7 @@ const Profile: React.FC = () => {
                 if (response.ok) {
                     const data: UserProfile = await response.json();
                     setProfileData(data);
-                    setSavedProfileData({ ...data }); // store a copy for reverting
+                    setSavedProfileData({ ...data });
                 } else if (response.status === 401) {
                     setError('Unauthorized access. Please log in again.');
                     logout();
@@ -107,7 +105,6 @@ const Profile: React.FC = () => {
     }, [profileData]);
 
     const handleCancel = useCallback(() => {
-        // revert to the previous saved data
         setProfileData(savedProfileData);
         setIsEditing(false);
     }, [savedProfileData]);
@@ -137,8 +134,6 @@ const Profile: React.FC = () => {
     return (
         <div className="profile-container">
             <div className="outer-box">
-
-                {/* Toolbar area */}
                 <div className="profile-toolbar">
                     <div className="toolbar-title">User Profile</div>
                     <div className="toolbar-actions">
@@ -159,9 +154,7 @@ const Profile: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Cards area */}
                 <div className="cards-area">
-                    {/* Basic Info Card */}
                     <div className="profile-card basic-info-card">
                         <div className="profile-card-header">
                             <img
@@ -196,7 +189,6 @@ const Profile: React.FC = () => {
                         </div>
 
                         <div className="profile-card-body">
-                            {/* Email (read-only) */}
                             <div className="profile-field">
                                 <label>Email:</label>
                                 <input
@@ -207,7 +199,6 @@ const Profile: React.FC = () => {
                                 />
                             </div>
 
-                            {/* First Name */}
                             <div className="profile-field">
                                 <label>First Name:</label>
                                 <input
@@ -219,7 +210,6 @@ const Profile: React.FC = () => {
                                 />
                             </div>
 
-                            {/* Last Name */}
                             <div className="profile-field">
                                 <label>Last Name:</label>
                                 <input
@@ -231,7 +221,6 @@ const Profile: React.FC = () => {
                                 />
                             </div>
 
-                            {/* Phone Number */}
                             <div className="profile-field">
                                 <label>Phone Number:</label>
                                 <input
@@ -243,7 +232,6 @@ const Profile: React.FC = () => {
                                 />
                             </div>
 
-                            {/* Gender (dropdown) */}
                             <div className="profile-field">
                                 <label>Gender:</label>
                                 <select
@@ -258,7 +246,6 @@ const Profile: React.FC = () => {
                                 </select>
                             </div>
 
-                            {/* Date of Birth (replaces Age) */}
                             <div className="profile-field">
                                 <label>Date of Birth:</label>
                                 <input
@@ -272,19 +259,16 @@ const Profile: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Contact Card (empty) */}
                     <div className="profile-card contacts-card">
-                        <p>Contact info goes here (currently empty).</p>
+                        <p>TODO Create bookshelf (currently empty).</p>
                     </div>
 
-                    {/* Address Card (empty) */}
                     <div className="profile-card address-card">
-                        <p>Address info goes here (currently empty).</p>
+                        <p>Another box for potential features (currently empty).</p>
                     </div>
                 </div>
             </div>
 
-            {/* Change Password Overlay (Placeholder) */}
             {isChangePasswordOpen && (
                 <div className="change-password-overlay">
                     <div className="change-password-modal">

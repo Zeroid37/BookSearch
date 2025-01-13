@@ -1,4 +1,3 @@
-// src/pages/Books.tsx
 const Books = () => {
   return (
     <div>

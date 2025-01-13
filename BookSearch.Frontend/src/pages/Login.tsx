@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../components/AuthContext"; // Import the Auth context
+import { useAuth } from "../components/AuthContext";
 import "./styles/Login.css";
 
 function Login() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const navigate = useNavigate(); // Initialize useNavigate
-    const { isAuthenticated, login, logout } = useAuth(); // Access authentication state and functions
+    const navigate = useNavigate();
+    const { isAuthenticated, login, logout } = useAuth();
 
     const handleLogin = async () => {
         try {
@@ -22,12 +22,9 @@ function Login() {
             if (response.ok) {
                 const result = await response.json();
 
-                // Use the login function to store the token and authenticate
+
                 login(result.token);
-
                 alert(`Login successful! Welcome, ${result.userName}`);
-
-                // Redirect to the home page or another page
                 navigate("/");
             } else {
                 const errorData = await response.json();
@@ -39,7 +36,6 @@ function Login() {
         }
     };
 
-    // Display appropriate content based on authentication status
     if (isAuthenticated) {
         return (
             <div className="logged-in-container">

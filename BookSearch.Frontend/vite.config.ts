@@ -71,6 +71,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/book/searchGoogleAPI': {
+                target,
+                secure: false
+            },
             '^/authping': {
                 target,
                 secure: false

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace BookSearch.Server.Data
+namespace BookSearch.DAL.Data
 {
     public class ApplicationUser : IdentityUser
     {

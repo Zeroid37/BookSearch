@@ -12,14 +12,12 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    // Check the authentication status when the app is loaded
     useEffect(() => {
         const token = localStorage.getItem("authToken");
 
         if (token) {
             const decodedToken = jwtDecode<JwtPayload>(token);
             if (decodedToken.exp && Date.now() >= decodedToken.exp * 1000) {
-                // Token expired
                 localStorage.removeItem("authToken");
                 setIsAuthenticated(false);
             } else {
@@ -27,7 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
         }
 
-        // Listen for changes in localStorage (e.g., logout from other tabs or windows)
         const handleStorageChange = () => {
             const token = localStorage.getItem("authToken");
             setIsAuthenticated(!!token);
@@ -35,7 +32,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         window.addEventListener("storage", handleStorageChange);
 
-        // Clean up the event listener when the component unmounts
         return () => {
             window.removeEventListener("storage", handleStorageChange);
         };
@@ -43,12 +39,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const login = (token: string) => {
         localStorage.setItem("authToken", token);
-        setIsAuthenticated(true); // Update state immediately
+        setIsAuthenticated(true);
     };
 
     const logout = () => {
         localStorage.removeItem("authToken");
-        setIsAuthenticated(false); // Update state immediately
+        setIsAuthenticated(false);
     };
 
     return (

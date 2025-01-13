@@ -31,6 +31,12 @@ android/app/release/
 # Ignore build directories
 bin/
 obj/
+**/bin/
+**/obj/
+*/bin/
+*/obj/
+/bin/
+/obj/
 
 # User-specific files
 *.user
