@@ -16,9 +16,28 @@ namespace BookSearch.BLL.Logic
             _bookRepository = bookRepository;
         }
 
-        public Task<BookFromGoogleDTO> GetBookByIsbnAsync(string isbn)
+        public async Task<BookDto> GetBookByIsbnAsync(string isbn)
         {
-            throw new NotImplementedException();
+            // Call the repository to fetch the Google Books item
+            var googleBook = await _bookRepository.GetBookByIsbnAsync(isbn);
+
+            // If not found, return null
+            if (googleBook == null)
+            {
+                return null;
+            }
+
+            // Convert the Google Book item into BookDto
+            return new BookDto
+            {
+                Title = googleBook.volumeInfo.title,
+                Author = googleBook.volumeInfo.authors.FirstOrDefault(),
+                ISBN = googleBook.volumeInfo.industryIdentifiers.FirstOrDefault(i => i.type == "ISBN_13").identifier,
+                PublishYear = googleBook.volumeInfo.publishedDate.Split('-')[0],
+                Publisher = googleBook.volumeInfo.publisher,
+                Genres = new List<string>(),
+                Description = googleBook.volumeInfo.description
+            };
         }
 
         public async Task SaveBookAsync(BookDto book)

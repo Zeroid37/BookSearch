@@ -11,6 +11,6 @@ namespace BookSearch.DAL.Interface
     {
         Task SaveBookAsync(BookDto book);
         Task<List<BookDto>> SearchBooksAsync(BookDto criteria);
-        Task<BookFromGoogleDTO> GetBookByIsbnAsync(string isbn);
+        public Task<Item> GetBookByIsbnAsync(string isbn);
     }
 }

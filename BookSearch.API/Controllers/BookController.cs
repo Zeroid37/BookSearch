@@ -51,5 +51,27 @@ namespace BookSearch.Server.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet("searchGoogleAPI")]
+        public async Task<IActionResult> Search(string isbn)
+        {
+            Console.WriteLine($"Received ISBN: {isbn}");
+
+            if (string.IsNullOrWhiteSpace(isbn))
+            {
+                Console.WriteLine("ISBN is empty or null.");
+                return BadRequest("ISBN cannot be empty.");
+            }
+
+            var book = await _bookLogic.GetBookByIsbnAsync(isbn);
+
+            if (book == null)
+            {
+                Console.WriteLine($"No book found for ISBN: {isbn}");
+                return NotFound(new { Message = "No book found with the given ISBN." });
+            }
+
+            Console.WriteLine($"Returning book: {book.Title}");
+            return Ok(book);
+        }
     }
 }

@@ -3,6 +3,7 @@ using BookSearch.DAL.Interface;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 
 namespace BookSearch.DAL.Repository
 {
@@ -10,6 +11,7 @@ namespace BookSearch.DAL.Repository
     {
         private readonly IMongoCollection<BookDto> _bookCollection;
         private readonly IConfiguration _configuration;
+        private readonly string _apiKey;
 
         public BookRepository(IConfiguration configuration)
         {
@@ -18,6 +20,29 @@ namespace BookSearch.DAL.Repository
             var client = new MongoClient(connectionString);
             var database = client.GetDatabase("BookSearchDB");
             _bookCollection = database.GetCollection<BookDto>("Books");
+            _apiKey = _configuration["GoogleAPI:KeyAPI"];
+        }
+
+        public async Task<Item> GetBookByIsbnAsync(string isbn)
+        {
+            string url = $"https://www.googleapis.com/books/v1/volumes?q={isbn}&maxResults=1&langRestrict=en";
+
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+                    var googleBooksResponse = JsonConvert.DeserializeObject<Root>(jsonResponse);
+
+                    if (googleBooksResponse?.items != null && googleBooksResponse.items.Count > 0)
+                    {
+                        return googleBooksResponse.items[0];
+                    }
+                }
+            }
+            return null;
         }
 
         public async Task SaveBookAsync(BookDto book)
@@ -75,11 +100,6 @@ namespace BookSearch.DAL.Repository
                 Console.WriteLine(e);
                 throw;
             }
-        }
-
-        public Task<BookFromGoogleDTO> GetBookByIsbnAsync(string isbn)
-        {
-            throw new NotImplementedException();
         }
     }
 }
