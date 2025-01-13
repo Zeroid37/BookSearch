@@ -15,18 +15,14 @@ namespace BookSearch.Server
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Load User Secrets in Development
             if (builder.Environment.IsDevelopment())
             {
                 builder.Configuration.AddUserSecrets<Program>();
             }
 
-            // Configure Entity Framework with PostgreSQL
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Configure Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -36,7 +32,6 @@ namespace BookSearch.Server
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
-            // Configure JWT Authentication
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
@@ -56,18 +51,18 @@ namespace BookSearch.Server
                 };
             });
 
-            // Configure CORS
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend", policy =>
                 {
-                    policy.WithOrigins("https://localhost:5173") // Frontend URL
+                    policy.WithOrigins("https://localhost:5173")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
             });
 
 
+            //*******DEPENDENCY INJECTION*******//
 
             //Logic Classes
             builder.Services.AddTransient<IBookLogic, BookLogic>();
@@ -77,19 +72,15 @@ namespace BookSearch.Server
             builder.Services.AddTransient<IBookRepository, BookRepository>();
             builder.Services.AddTransient<IAuthRepository, AuthRepository>();
 
+            //*******DEPENDENCY INJECTION*******//
 
-
-            // Add Authorization
             builder.Services.AddAuthorization();
-
-            // Add Controllers and Swagger
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Middleware Setup
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
@@ -101,10 +92,8 @@ namespace BookSearch.Server
 
             app.UseHttpsRedirection();
 
-            // Use CORS
             app.UseCors("AllowFrontend");
 
-            // Use Authentication and Authorization
             app.UseAuthentication();
             app.UseAuthorization();
 

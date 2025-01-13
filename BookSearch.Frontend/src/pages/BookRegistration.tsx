@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./styles/BookRegistration.css";
 
-// Sample genres. Adjust as needed.
+
 const genreOptions = [
     "Fiction", "Non-Fiction", "Sci-Fi", "Fantasy", "Mystery", "Romance", "Thriller",
     "Self-Help", "Adventure", "Biography", "Horror", "Drama", "History", "Poetry",
@@ -37,7 +37,6 @@ const BookRegistration: React.FC = () => {
 
         try {
             const token = localStorage.getItem('authToken');
-            console.log("JWT Token:", token);
             const response = await fetch(`book/searchGoogleAPI?isbn=${isbn}`, {
                 method: "GET",
                 headers: {

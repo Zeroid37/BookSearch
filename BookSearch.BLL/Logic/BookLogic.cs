@@ -18,16 +18,13 @@ namespace BookSearch.BLL.Logic
 
         public async Task<BookDto> GetBookByIsbnAsync(string isbn)
         {
-            // Call the repository to fetch the Google Books item
             var googleBook = await _bookRepository.GetBookByIsbnAsync(isbn);
 
-            // If not found, return null
             if (googleBook == null)
             {
                 return null;
             }
 
-            // Convert the Google Book item into BookDto
             return new BookDto
             {
                 Title = googleBook.volumeInfo.title,

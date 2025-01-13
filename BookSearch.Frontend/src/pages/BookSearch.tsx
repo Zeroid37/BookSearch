@@ -51,8 +51,8 @@ const BookSearch: React.FC = () => {
             isbn: isbn || "",
             publisher: publisher || "",
             publishYear: publishYear || "",
-            genres: selectedGenres, // Send genres as an array
-            description: "", // Send description as an empty string
+            genres: selectedGenres,
+            description: "",
         };
 
         try {
@@ -61,13 +61,13 @@ const BookSearch: React.FC = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(payload), // Send payload in the request body
+                body: JSON.stringify(payload),
             });
 
             if (response.ok) {
-                const data = await response.json(); // Parse the response JSON
-                setResults(data); // Update the results state
-                setError(null); // Clear any previous errors
+                const data = await response.json();
+                setResults(data);
+                setError(null);
             } else {
                 setError("Failed to fetch results. Please try again.");
             }
@@ -79,62 +79,51 @@ const BookSearch: React.FC = () => {
 
     return (
         <div className="book-search">
-            {/* Search Form */}
             <form className="search-form" onSubmit={handleSearch}>
                 <h1>Search for Books</h1>
 
-                {/* Title */}
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
                         type="text"
                         id="title"
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
+                        onChange={(e) => setTitle(e.target.value)}/>
                 </div>
 
-                {/* Author */}
                 <div className="form-group">
                     <label htmlFor="author">Author</label>
                     <input
                         type="text"
                         id="author"
                         value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                    />
+                        onChange={(e) => setAuthor(e.target.value)}/>
                 </div>
 
-                {/* ISBN */}
                 <div className="form-group">
                     <label htmlFor="isbn">ISBN</label>
                     <input
                         type="text"
                         id="isbn"
                         value={isbn}
-                        onChange={(e) => setIsbn(e.target.value)}
-                    />
+                        onChange={(e) => setIsbn(e.target.value)}/>
                 </div>
 
-                {/* Publisher */}
                 <div className="form-group">
                     <label htmlFor="publisher">Publisher</label>
                     <input
                         type="text"
                         id="publisher"
                         value={publisher}
-                        onChange={(e) => setPublisher(e.target.value)}
-                    />
+                        onChange={(e) => setPublisher(e.target.value)}/>
                 </div>
 
-                {/* Publish Year */}
                 <div className="form-group">
                     <label htmlFor="publishYear">Publish Year</label>
                     <select
                         id="publishYear"
                         value={publishYear}
-                        onChange={(e) => setPublishYear(e.target.value)}
-                    >
+                        onChange={(e) => setPublishYear(e.target.value)}>
                         <option value="">Select Year...</option>
                         {years.map((year) => (
                             <option key={year} value={year.toString()}>
@@ -144,7 +133,6 @@ const BookSearch: React.FC = () => {
                     </select>
                 </div>
 
-                {/* Genres */}
                 <div className="form-group">
                     <label>Genres</label>
                     <div className="checkbox-container">
@@ -154,21 +142,18 @@ const BookSearch: React.FC = () => {
                                     type="checkbox"
                                     value={genre}
                                     checked={selectedGenres.includes(genre)}
-                                    onChange={() => handleGenreChange(genre)}
-                                />
+                                    onChange={() => handleGenreChange(genre)}/>
                                 <span className="custom-checkbox"></span>
                                 {genre}
                             </label>
                         ))}
                     </div>
                 </div>
-
                 <button type="submit" className="submit-button">
                     Search
                 </button>
             </form>
 
-            {/* Results Section */}
             {error && <p className="error-message">{error}</p>}
             {results.length > 0 && (
                 <div className="results">
