@@ -1,4 +1,7 @@
 using BookSearch.BLL.Logic;
+using BookSearch.BLL.Interface;
+using BookSearch.DAL.Repository;
+using BookSearch.DAL.Interface;
 using BookSearch.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -67,9 +70,12 @@ namespace BookSearch.Server
 
 
             //Logic Classes
+            builder.Services.AddTransient<IBookLogic>();
             builder.Services.AddTransient<BookLogic>();
 
             //DAL Classes
+            builder.Services.AddTransient<IBookRepository>();
+            builder.Services.AddTransient<BookRepository>();
 
 
 
