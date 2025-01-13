@@ -1,11 +1,11 @@
-﻿using BookSearch.Server.Data;
-using BookSearch.DAL.DTO;
+﻿using BookSearch.DAL.DTO;
+using BookSearch.DAL.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BookSearch.BLL.Logic;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using BookSearch.BLL.Interface;
 
 namespace BookSearch.Server.Controllers
 {
@@ -13,12 +13,10 @@ namespace BookSearch.Server.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly BookLogic _bookLogic;
+        private readonly IBookLogic _bookLogic;
 
-        public BookController(UserManager<ApplicationUser> userManager, BookLogic bookLogic)
+        public BookController(IBookLogic bookLogic)
         {
-            _userManager = userManager;
             _bookLogic = bookLogic;
         }
 
@@ -45,13 +43,11 @@ namespace BookSearch.Server.Controllers
 
             try
             {
-                // Await the async method
                 var books = await _bookLogic.SearchBooksAsync(criteria);
 
                 return Ok(books);
             } catch (Exception ex)
             {
-                // Return error response in case of exceptions
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

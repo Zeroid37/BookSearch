@@ -2,9 +2,6 @@
 using BookSearch.DAL.DTO;
 using BookSearch.DAL.Interface;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Bson;
-using MongoDB.Driver;
-
 
 namespace BookSearch.BLL.Logic
 {

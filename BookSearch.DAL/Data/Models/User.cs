@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace BookSearch.Server.Data.Models
+namespace BookSearch.DAL.Data.Models
 {
     public class User
     {

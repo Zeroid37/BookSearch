@@ -2,7 +2,7 @@ using BookSearch.BLL.Logic;
 using BookSearch.BLL.Interface;
 using BookSearch.DAL.Repository;
 using BookSearch.DAL.Interface;
-using BookSearch.Server.Data;
+using BookSearch.DAL.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -70,12 +70,12 @@ namespace BookSearch.Server
 
 
             //Logic Classes
-            builder.Services.AddTransient<IBookLogic>();
-            builder.Services.AddTransient<BookLogic>();
+            builder.Services.AddTransient<IBookLogic, BookLogic>();
+            builder.Services.AddTransient<IAuthLogic, AuthLogic>();
 
             //DAL Classes
-            builder.Services.AddTransient<IBookRepository>();
-            builder.Services.AddTransient<BookRepository>();
+            builder.Services.AddTransient<IBookRepository, BookRepository>();
+            builder.Services.AddTransient<IAuthRepository, AuthRepository>();
 
 
 

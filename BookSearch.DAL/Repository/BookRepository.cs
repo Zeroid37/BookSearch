@@ -13,7 +13,8 @@ namespace BookSearch.DAL.Repository
 
         public BookRepository(IConfiguration configuration)
         {
-            var connectionString = configuration["MongoDB:ConnectionString"];
+            _configuration = configuration;
+            var connectionString = _configuration["MongoDB:ConnectionString"];
             var client = new MongoClient(connectionString);
             var database = client.GetDatabase("BookSearchDB");
             _bookCollection = database.GetCollection<BookDto>("Books");

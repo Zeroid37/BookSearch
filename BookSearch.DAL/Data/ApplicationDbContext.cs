@@ -1,10 +1,10 @@
-﻿using BookSearch.Server.Data.Models;
+﻿using BookSearch.DAL.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace BookSearch.Server.Data
+namespace BookSearch.DAL.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
