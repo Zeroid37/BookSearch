@@ -37,9 +37,10 @@ namespace BookSearch.BLL.Logic
             };
         }
 
-        public async Task SaveBookAsync(BookDto book)
+        public async Task<bool> SaveBookAsync(BookDto book)
         {
             await _bookRepository.SaveBookAsync(book);
+            return true;
         }
 
         public async Task<List<BookDto>> SearchBooksAsync(BookDto criteria)

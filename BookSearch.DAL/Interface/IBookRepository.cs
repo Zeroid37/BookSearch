@@ -9,7 +9,7 @@ namespace BookSearch.DAL.Interface
 {
     public interface IBookRepository
     {
-        Task SaveBookAsync(BookDto book);
+        Task<bool> SaveBookAsync(BookDto book);
         Task<List<BookDto>> SearchBooksAsync(BookDto criteria);
         public Task<Item> GetBookByIsbnAsync(string isbn);
     }

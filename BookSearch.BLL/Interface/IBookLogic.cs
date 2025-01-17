@@ -9,7 +9,7 @@ namespace BookSearch.BLL.Interface
 {
     public interface IBookLogic
     {
-        Task SaveBookAsync(BookDto book);
+        Task<bool> SaveBookAsync(BookDto book);
         Task<BookDto> GetBookByIsbnAsync(string isbn);
         Task<List<BookDto>> SearchBooksAsync(BookDto criteria);
     }

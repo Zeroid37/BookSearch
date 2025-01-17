@@ -29,26 +29,50 @@ namespace BookSearch.DAL.Repository
 
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    string jsonResponse = await response.Content.ReadAsStringAsync();
-                    var googleBooksResponse = JsonConvert.DeserializeObject<Root>(jsonResponse);
-
-                    if (googleBooksResponse?.items != null && googleBooksResponse.items.Count > 0)
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
                     {
-                        return googleBooksResponse.items[0];
+                        string jsonResponse = await response.Content.ReadAsStringAsync();
+                        var googleBooksResponse = JsonConvert.DeserializeObject<Root>(jsonResponse);
+
+                        if (googleBooksResponse?.items != null && googleBooksResponse.items.Count > 0)
+                        {
+                            return googleBooksResponse.items[0];
+                        }
                     }
+                } catch (Exception e)
+                {
+                    throw;
                 }
+                client.Dispose();
             }
             return null;
         }
 
-        public async Task SaveBookAsync(BookDto book)
+        public async Task<bool> SaveBookAsync(BookDto book)
+        {
+            var filter = Builders<BookDto>.Filter.Eq(x => x.ISBN, book.ISBN);
+            bool isInDB = await _bookCollection.Find(filter).Limit(1).AnyAsync();
+
+            if(!isInDB)
+            {
+                await SaveBookInDatabase(book);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        private async Task SaveBookInDatabase(BookDto book)
         {
             await _bookCollection.InsertOneAsync(book);
         }
+
         public async Task<List<BookDto>> SearchBooksAsync(BookDto criteria)
         {
             var builder = Builders<BookDto>.Filter;

@@ -24,13 +24,20 @@ namespace BookSearch.Server.Controllers
         [HttpPost("registerBook")]
         public async Task<IActionResult> RegisterBook([FromBody] BookDto book)
         {
+
             if (book == null)
             {
                 return BadRequest("Book object cannot be null.");
             }
 
-            await _bookLogic.SaveBookAsync(book);
-            return Ok("Book saved successfully.");
+            bool isSaved = await _bookLogic.SaveBookAsync(book);
+
+            if (isSaved)
+            {
+                return Ok("Book saved successfully.");
+            }
+
+            return Conflict("Book with the same ISBN already exists.");
         }
 
         [HttpPost("searchBooks")]
@@ -51,14 +58,12 @@ namespace BookSearch.Server.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
         [HttpGet("searchGoogleAPI")]
         public async Task<IActionResult> Search(string isbn)
         {
-            Console.WriteLine($"Received ISBN: {isbn}");
-
             if (string.IsNullOrWhiteSpace(isbn))
             {
-                Console.WriteLine("ISBN is empty or null.");
                 return BadRequest("ISBN cannot be empty.");
             }
 
@@ -66,11 +71,8 @@ namespace BookSearch.Server.Controllers
 
             if (book == null)
             {
-                Console.WriteLine($"No book found for ISBN: {isbn}");
                 return NotFound(new { Message = "No book found with the given ISBN." });
             }
-
-            Console.WriteLine($"Returning book: {book.Title}");
             return Ok(book);
         }
     }
