@@ -1,44 +1,37 @@
 import torch
 from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader, Dataset
 from torch.nn.utils.rnn import pad_sequence
 from torchtext.vocab import build_vocab_from_iterator
 from torchtext.data.utils import get_tokenizer
 import pandas as pd
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
 
-######################### Step 1: Preprocessing #########################
-# Load your dataset
-df = pd.read_csv('titles.csv', sep=";")  # Replace with your dataset path
+######################### Preprocessing #########################
+df = pd.read_csv('old_dataset.csv', sep=";")
 titles = df['Title'].tolist()
 labels = df['Label'].tolist()  # 0 = fake, 1 = real
 
-# Tokenization
 tokenizer = get_tokenizer('basic_english')
 tokenized_titles = [tokenizer(title) for title in titles]
 
-# Vocabulary
 vocab = build_vocab_from_iterator(tokenized_titles, specials=["<pad>", "<unk>"])
 vocab.set_default_index(vocab["<unk>"])
 
-# Convert text to tensor
 def encode_text(text):
     return torch.tensor([vocab[token] for token in tokenizer(text)])
 
 encoded_titles = [encode_text(title) for title in titles]
 labels = torch.tensor(labels, dtype=torch.long)
 
-# Padding sequences
 padded_titles = pad_sequence(encoded_titles, batch_first=True)
 
-# Train-test split
 X_train, X_test, y_train, y_test = train_test_split(padded_titles, labels, test_size=0.2, random_state=42)
 
 
-######################### Step 2: Defining the model #########################
+######################### Defining model #########################
 class BookTitleClassifier(nn.Module):
     def __init__(self, vocab_size, embed_dim, hidden_dim, output_dim):
         super(BookTitleClassifier, self).__init__()
@@ -49,55 +42,53 @@ class BookTitleClassifier(nn.Module):
     def forward(self, x):
         x = self.embedding(x)
         _, (hidden, _) = self.lstm(x)
-        return self.fc(hidden[-1])  # Final hidden state
+        return self.fc(hidden[-1])
 
-# Hyperparameters
 vocab_size = len(vocab)
 embed_dim = 128
-hidden_dim = 128
+hidden_dim = 64
 output_dim = 2  # Binary classification: Fake (0) or Real (1)
 batch_size = 32
-epochs = 25
+epochs = 10
 learning_rate = 0.001
 
-# Model, loss, and optimizer
 model = BookTitleClassifier(vocab_size, embed_dim, hidden_dim, output_dim)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-# Create datasets
 train_data = TensorDataset(X_train, y_train)
 test_data = TensorDataset(X_test, y_test)
 
-# Create data loaders
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_data, batch_size=batch_size)
 
 
-######################### Step 3: Training and Evaluation #########################
+######################### Training and Evaluation #########################
+lossValues = []
 for epoch in range(epochs):
-    model.train()  # Set to training mode
+    model.train()
     total_loss = 0
 
     for titles, labels in train_loader:
-        outputs = model(titles)  # Forward pass
-        loss = criterion(outputs, labels)  # Compute loss
+        outputs = model(titles)
+        loss = criterion(outputs, labels)
 
-        optimizer.zero_grad()  # Clear previous gradients
-        loss.backward()  # Backpropagation
-        optimizer.step()  # Update weights
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
         total_loss += loss.item()
+    lossValues.append(round(total_loss/len(train_loader), 4))
 
     print(f"Epoch {epoch + 1}/{epochs}, Loss: {total_loss / len(train_loader):.4f}")
 
-model.eval()  # Set to evaluation mode
+model.eval()
 predictions, actuals = [], []
 
 with torch.no_grad():
     for titles, labels in test_loader:
         outputs = model(titles)
-        preds = torch.argmax(outputs, dim=1)  # Get predicted class
+        preds = torch.argmax(outputs, dim=1)
         predictions.extend(preds.tolist())
         actuals.extend(labels.tolist())
 
@@ -107,17 +98,26 @@ print(f"Test Accuracy: {accuracy * 100:.2f}%")
 
 def predict_title(title):
     model.eval()
-    encoded = encode_text(title).unsqueeze(0)  # Add batch dimension
+    encoded = encode_text(title).unsqueeze(0)
     padded = pad_sequence([encoded], batch_first=True)
-    padded = padded.squeeze(0)# Pad input
+    padded = padded.squeeze(0)
     with torch.no_grad():
         output = model(padded)
         prediction = torch.argmax(output, dim=1).item()
     return "Real" if prediction == 1 else "Fake"
 
 # Example
-print(predict_title("The Great Gatsby"))
+print(predict_title("The Lord of the Rings"))
 print(predict_title("Secret Alien Love Chronicles"))
 
 
-######################### Step 4: Save the Model #########################
+######################### Plot data #########################
+plt.plot(range(1, epochs+1), lossValues, label="Loss")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.title("Training Loss")
+plt.legend()
+plt.ylim(0, 1)
+plt.xticks(range(1, epochs + 1))
+plt.show()
+print(lossValues[0:10])
